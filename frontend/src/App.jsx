@@ -64,8 +64,8 @@ const getPaymentStatus = (user) => {
 const demoUsers = [
   {
     id: 1,
-    name: "Sokha Chan",
-    email: "sokha@example.com",
+    name: "Eangchhay",
+    email: "Eangchhay13@gmail.com",
     gender: "Male",
     role: "Administrator",
     salary: 1800,
@@ -74,30 +74,7 @@ const demoUsers = [
     paymentStatus: "Pending",
     status: "Active",
   },
-  {
-    id: 2,
-    name: "Dara Lim",
-    email: "dara@example.com",
-    gender: "Female",
-    role: "Editor",
-    salary: 1450,
-    payDate: "2026-10-10",
-    joinedAt: "2026-09-10",
-    paymentStatus: "Pending",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Mony Vuth",
-    email: "mony@example.com",
-    gender: "Male",
-    role: "Viewer",
-    salary: 1100,
-    payDate: "2026-10-10",
-    joinedAt: "2026-09-10",
-    paymentStatus: "Pending",
-    status: "Pending",
-  },
+  
 ];
 const demoPayroll = [
   {
@@ -133,16 +110,16 @@ function App() {
   const [session, setSession] = useState(() =>
     localStorage.getItem("admin_session"),
   );
-  const [profile, setProfile] = useState(() =>
-    JSON.parse(
-      localStorage.getItem("admin_profile") ||
-        JSON.stringify({
-          name: "Sokha Chan",
-          email: "sokha@example.com",
-          role: "Administrator",
-        }),
-    ),
-  );
+const [profile, setProfile] = useState(() =>
+  JSON.parse(
+    localStorage.getItem("admin_profile") ||
+      JSON.stringify({
+        name: "Eangchhay",
+        email: "Eangchhay13@gmail.com",
+        role: "Administrator",
+      }),
+  ),
+);
   const [page, setPage] = useState("overview");
   const [users, setUsers] = useState(() => {
     const storedUsers = JSON.parse(
@@ -199,12 +176,39 @@ function App() {
   }, [session]);
   if (!session)
     return (
+      // <Login
+      //   onLogin={(result) => {
+      //     localStorage.setItem("admin_session", result?.token || "demo");
+      //     if (result?.token) localStorage.setItem("admin_token", result.token);
+      //     setSession(result?.token || "demo");
+      //   }}
       <Login
-        onLogin={(result) => {
-          localStorage.setItem("admin_session", result?.token || "demo");
-          if (result?.token) localStorage.setItem("admin_token", result.token);
-          setSession(result?.token || "demo");
-        }}
+  onLogin={(result) => {
+    localStorage.setItem("admin_session", result?.token || "demo");
+
+    if (result?.token) {
+      localStorage.setItem("admin_token", result.token);
+    }
+
+    const loggedUser = result?.user || result?.data?.user;
+
+    if (loggedUser) {
+      const nextProfile = {
+        name: loggedUser.name || "Admin",
+        email: loggedUser.email || "",
+        role: loggedUser.role || "Administrator",
+      };
+
+      localStorage.setItem(
+        "admin_profile",
+        JSON.stringify(nextProfile)
+      );
+
+      setProfile(nextProfile);
+    }
+
+    setSession(result?.token || "demo");
+  }}
       />
     );
 
@@ -432,7 +436,7 @@ function Login({ onLogin }) {
     () =>
       JSON.parse(
         localStorage.getItem("admin_profile") ||
-          '{"email":"sokha@example.com"}',
+          '{"email":""}',
       ).email,
   );
   const [password, setPassword] = useState("password");
@@ -447,7 +451,7 @@ function Login({ onLogin }) {
       // Keep demo login available when the API is unavailable.
     }
     const savedProfile = JSON.parse(
-      localStorage.getItem("admin_profile") || '{"email":"sokha@example.com"}',
+      localStorage.getItem("admin_profile") || '{"email":""}',
     );
     const savedPassword = localStorage.getItem("admin_password") || "password";
     if (email !== savedProfile.email || password !== savedPassword)
