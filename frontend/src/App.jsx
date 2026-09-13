@@ -439,7 +439,7 @@ function Login({ onLogin }) {
           '{"email":""}',
       ).email,
   );
-  const [password, setPassword] = useState("password");
+  const [password, setPassword] = useState("Chhay123@");
   const [error, setError] = useState("");
   const submit = async (event) => {
     event.preventDefault();
@@ -453,7 +453,7 @@ function Login({ onLogin }) {
     const savedProfile = JSON.parse(
       localStorage.getItem("admin_profile") || '{"email":""}',
     );
-    const savedPassword = localStorage.getItem("admin_password") || "password";
+    const savedPassword = localStorage.getItem("admin_password") || "Chhay123@";
     if (email !== savedProfile.email || password !== savedPassword)
       return setError("Email or password is incorrect.");
     onLogin();
@@ -483,7 +483,7 @@ function Login({ onLogin }) {
             <Boxes size={20} />
           </span>
           <span>
-            nexa<span className="brand-dot">.</span>admin
+            Employees<span className="brand-dot">.</span>Admin
           </span>
         </div>
         <div className="login-heading">
