@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: nexa-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: backend }
+  template:
+    metadata: { labels: { app: backend } }
+    spec:
+      containers:
+        - name: backend
+          image: project9-13-2026-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8000 }]
+          env:
+            - { name: APP_KEY, value: "base64:87m6pTRZ/VdKpb9KL1AhVEj3laIw5JhzzW/E1gaFyBg=" }
+            - { name: APP_ENV, value: production }
+            - { name: APP_DEBUG, value: "false" }
+            - { name: DB_CONNECTION, value: mysql }
+            - { name: DB_HOST, value: mysql }
+            - { name: DB_PORT, value: "3306" }
+            - { name: DB_DATABASE, value: admin_system }
+            - { name: DB_USERNAME, value: admin }
+            - { name: DB_PASSWORD, valueFrom: { secretKeyRef: { name: nexa-secrets, key: MYSQL_PASSWORD } } }
+          readinessProbe: { httpGet: { path: /up, port: 8000 }, initialDelaySeconds: 15, periodSeconds: 10 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: nexa-admin
+spec:
+  selector: { app: backend }
+  ports: [{ port: 8000, targetPort: 8000 }]
